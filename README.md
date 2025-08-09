@@ -10,9 +10,7 @@ A full-stack web application that aggregates AI/ML news and trending GitHub repo
 ## ✨ Key Features
 
 *   **📰 AI/ML News Feed**: A real-time feed of the latest news from the world of AI, using NewsAPI as the primary source and GNews as a fallback.
-*   **🚀 Trending Repositories**: Discover the most popular and trending open-source AI/ML projects from GitHub.
-*   **🔖 Bookmarking**: Save your favorite articles and repositories for later. (Requires GitHub sign-in).
-*   **🌗 Light/Dark Mode**: A comfortable viewing experience, day or night.
+*   **🚀 Trending Repositories**: Discover the most popular and trending open-source AI/ML projects from 
 *   **📱 Responsive Design**: A clean and minimal UI that works seamlessly on all devices.
 
 ***
