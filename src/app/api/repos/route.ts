@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchRepos } from '@/server/providers/github'
-
-export const dynamic = 'force-dynamic'
+import { normalizeTopicsInput } from '@/lib/topics'
+import { fetchTrendingRepos } from '@/server/providers/github'
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url)
-  const topics = url.searchParams.getAll('topics') ?? undefined
-  const languages = url.searchParams.getAll('languages') ?? undefined
-  const period = (url.searchParams.get('period') ?? '30d') as any
-  const min_stars = parseInt(url.searchParams.get('min_stars') ?? '100', 10)
-  const page = parseInt(url.searchParams.get('page') ?? '1', 10)
-  const pageSize = Math.min(50, parseInt(url.searchParams.get('pageSize') ?? '30', 10))
+  try {
+    const url = new URL(req.url)
+    const topicsParam = url.searchParams.get('topics') ?? ''
+    const topics = normalizeTopicsInput(topicsParam)
+    const perPage = Math.min(50, parseInt(url.searchParams.get('pageSize') ?? '24', 10))
 
-  const res = await fetchRepos({ topics, languages, period, min_stars, page, pageSize })
-  return NextResponse.json({ ok: true, data: res.repos })
+    const { repos } = await fetchTrendingRepos({ topics, perPage })
+    return NextResponse.json({ ok: true, data: repos })
+  } catch (err: any) {
+    return NextResponse.json({ ok: false, error: String(err?.message ?? err) }, { status: 500 })
+  }
 }

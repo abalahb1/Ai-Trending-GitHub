@@ -12,8 +12,8 @@ type Props = {
   imageUrl?: string
 }
 
-function Badge({ children }: { children: React.ReactNode }) {
-  return <span className="badge">{children}</span>
+function Badge({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <span className={`badge ${className}`}>{children}</span>
 }
 
 export default function NewsCard({ title, url, source, publishedAt, summary, imageUrl }: Props) {

@@ -103,3 +103,6 @@ export async function fetchTrendingRepos({ topics = [], perPage = 24 }: RepoQuer
 }
 
 export default fetchTrendingRepos
+
+// Back-compat: some routes import `fetchRepos`
+export { fetchTrendingRepos as fetchRepos }

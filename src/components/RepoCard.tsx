@@ -18,8 +18,8 @@ export type RepoCardProps = {
   ogImageUrl?: string
 }
 
-function Badge({ children }: { children: React.ReactNode }) {
-  return <span className="badge">{children}</span>
+function Badge({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <span className={`badge ${className}`}>{children}</span>
 }
 
 export default function RepoCard(props: RepoCardProps) {
