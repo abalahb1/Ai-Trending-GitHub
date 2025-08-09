@@ -43,8 +43,8 @@ Make sure you have the following installed on your system:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://your-repository-url.git
-    cd ai-ml-pulse
+    git clone https://github.com/abalahb1/Ai-Trending-GitHub.git
+    cd Ai-Trending-GitHub
     ```
 
 2.  **Install dependencies:**
