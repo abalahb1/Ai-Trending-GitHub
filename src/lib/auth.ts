@@ -14,17 +14,18 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
-      // عند تسجيل الدخول لأول مرة ننسخ user.id إلى التوكن
-      if (user && (user as any).id) token.id = (user as any).id as string
-      return token
+      // On first sign-in, copy user.id to the token
+      if (user && (user as any).id) token.id = (user as any).id as string;
+      return token;
     },
     async session({ session, token }) {
-      // نحقن id داخل session.user ليستعمله الكود (Dashboard, APIs)
+      // Inject id into session.user for use in code (Dashboard, APIs)
       if (session.user) {
-        (session.user as any).id = (token.id as string) || (token.sub as string) || ""
+        (session.user as any).id =
+          (token.id as string) || (token.sub as string) || "";
       }
-      return session
-    }
+      return session;
+    },
   }
 }
 

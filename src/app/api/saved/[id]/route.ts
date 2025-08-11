@@ -17,19 +17,18 @@ export async function DELETE(req: NextRequest, ctx: any) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // احصل على userId من الإيميل
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { id: true }
-  })
-  if (!user) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 })
-  }
+  // Get userId from email
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
-  // احذف السجل الخاص بهذا المستخدم فقط
-  await prisma.savedItem.deleteMany({
-    where: { id, userId: user.id }   // ✅ استخدم userId بدل userEmail
-  })
+    await prisma.savedItem.deleteMany({
+      where: { id, userId: user.id }, // ✅ Use userId instead of userEmail
+    });
 
   return new NextResponse(null, { status: 204 })
 }

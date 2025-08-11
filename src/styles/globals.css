@@ -15,8 +15,7 @@ body {
   linear-gradient(to bottom, rgb(var(--bg-start)), rgb(var(--bg-end)));
 }
 
-/* تايبوجرافي: Inter + Cairo */
-.font-sans { font-family: var(--font-cairo), var(--font-inter), ui-sans-serif, system-ui, -apple-system; }
+.font-sans { font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system; }
 
 /* شبكة 8pt = اتساق المسافات (8/16/24/32px ...)  [oai_citation:5‡Cieden](https://cieden.com/book/sub-atomic/spacing/spacing-best-practices?utm_source=chatgpt.com) [oai_citation:6‡Medium](https://medium.com/built-to-adapt/intro-to-the-8-point-grid-system-d2573cde8632?utm_source=chatgpt.com) */
 .container { max-width: 1200px; }

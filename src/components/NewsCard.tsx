@@ -1,55 +1,92 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Globe } from "lucide-react"
+import * as React from "react";
+import { Globe, Calendar } from "lucide-react";
+import { SaveButton } from "./SaveButton";
 
 type Props = {
-  title: string
-  url: string
-  source: string
-  publishedAt: string
-  summary?: string
-  imageUrl?: string
-}
+  title: string;
+  url: string;
+  source: string;
+  publishedAt: string;
+  summary?: string;
+  imageUrl?: string;
+};
 
-function Badge({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <span className={`badge ${className}`}>{children}</span>
-}
+export default function NewsCard(props: Props) {
+  const { title, url, source, publishedAt, summary, imageUrl } = props;
 
-export default function NewsCard({ title, url, source, publishedAt, summary, imageUrl }: Props) {
-  const pretty = React.useMemo(() => {
-    const d = new Date(publishedAt)
-    if (isNaN(d.getTime())) return publishedAt
-    return new Intl.DateTimeFormat("en-GB", {
-      dateStyle: "medium",
-      timeStyle: "short",
-      hour12: false,
-      timeZone: "Asia/Baghdad"
-    }).format(d)
-  }, [publishedAt])
+  const publishedDate = React.useMemo(() => {
+    const date = new Date(publishedAt);
+    if (isNaN(date.getTime())) return null;
+    return date;
+  }, [publishedAt]);
 
-  const iso = (() => {
-    const d = new Date(publishedAt); return isNaN(d.getTime()) ? undefined : d.toISOString()
-  })()
+  const formattedDate = publishedDate
+    ? new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }).format(publishedDate)
+    : null;
 
   return (
-    <article className="card hover:translate-y-[-2px]">
-      {imageUrl && (
-        <div className="relative h-40 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-          <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+    <article className="relative group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
+      <a href={url} target="_blank" rel="noopener noreferrer" className="block">
+        <div className="relative h-40 w-full bg-gray-100 dark:bg-gray-700">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <Globe className="h-12 w-12 text-gray-400" />
+            </div>
+          )}
         </div>
-      )}
-
-      <div className="p-4 space-y-3">
-        <a className="font-semibold hover:underline" href={url} target="_blank" rel="noreferrer">{title}</a>
-        {summary && <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{summary}</p>}
-        <div className="flex items-center gap-2 text-xs">
-          <Badge className="inline-flex items-center gap-1"><Globe size={14} /> {source}</Badge>
-          <time dateTime={iso} className="opacity-70" suppressHydrationWarning>{pretty}</time>
+      </a>
+      <div className="flex flex-grow flex-col p-4">
+        <h2 className="flex-grow font-semibold text-gray-800 dark:text-gray-100">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            {title}
+          </a>
+        </h2>
+        {summary && (
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+            {summary}
+          </p>
+        )}
+        <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+          <span className="inline-flex items-center gap-1 font-medium">
+            <Globe size={14} /> {source}
+          </span>
+          {formattedDate && (
+            <time
+              dateTime={publishedDate?.toISOString()}
+              className="inline-flex items-center gap-1"
+            >
+              <Calendar size={14} />
+              {formattedDate}
+            </time>
+          )}
         </div>
       </div>
-
-      <a href={url} target="_blank" rel="noreferrer" className="absolute inset-0" aria-label={title} />
+      <SaveButton
+        item={{
+          type: "article",
+          title,
+          url,
+          source,
+          data: props,
+        }}
+      />
     </article>
-  )
+  );
 }
