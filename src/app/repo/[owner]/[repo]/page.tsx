@@ -5,11 +5,14 @@ import { Readme } from "./_components/readme";
 import { RepoDetails } from "./_components/repo-details";
 import { RepoHeader } from "./_components/repo-header";
 
-export default async function RepoPage({
-  params,
-}: {
-  params: { owner: string; repo: string };
-}) {
+interface PageProps {
+  params: {
+    owner: string;
+    repo: string;
+  };
+}
+
+export default async function RepoPage({ params }: PageProps) {
   const fullName = `${params.owner}/${params.repo}`;
 
   const [repository, readme] = await Promise.all([
