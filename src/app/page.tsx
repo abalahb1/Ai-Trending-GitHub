@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 function RepoGridSkeleton() {
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 8 }).map((_, i) => (
         <li key={i}>
           <RepoCardSkeleton />
@@ -23,7 +23,7 @@ function RepoGridSkeleton() {
 
 function NewsGridSkeleton() {
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 8 }).map((_, i) => (
         <li key={i}>
           <NewsCardSkeleton />
@@ -36,7 +36,7 @@ function NewsGridSkeleton() {
 async function TrendingRepos() {
   const { repos } = await fetchTrendingRepos({ topics: ["ai"], perPage: 8 });
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {repos.map(r => (
         <li key={r.id}>
           <RepoCard {...r} />
@@ -53,7 +53,7 @@ async function RecentNews() {
     language: "en",
   });
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {articles.map(a => (
         <li key={a.id}>
           <NewsCard {...a} />

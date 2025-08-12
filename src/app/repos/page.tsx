@@ -1,22 +1,16 @@
+"use client";
+
+import { Suspense, useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { Repo } from "@/server/providers/github";
 import RepoCard from "@/components/RepoCard";
-import { fetchTrendingRepos } from "@/server/providers/github";
-import { Pagination } from "@/components/Pagination";
-import { Suspense } from "react";
 import { RepoCardSkeleton } from "@/components/RepoCardSkeleton";
-
-export const dynamic = "force-dynamic";
-
-type SP = Record<string, string | string[] | undefined>;
-const first = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
-const toTopics = (v?: string | string[]) =>
-  (Array.isArray(v) ? v : [v ?? ""])
-    .flatMap(s => String(s).split(/[,\u060C،\s]+/))
-    .map(s => s.trim())
-    .filter(Boolean);
+import { Pagination } from "@/components/Pagination";
+import { RepoFilters } from "@/components/RepoFilters";
 
 function RepoGridSkeleton() {
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 12 }).map((_, i) => (
         <li key={i}>
           <RepoCardSkeleton />
@@ -26,96 +20,89 @@ function RepoGridSkeleton() {
   );
 }
 
-async function RepoList({ topics, page, perPage }: any) {
-  const { repos, totalCount } = await fetchTrendingRepos({
-    topics,
-    perPage,
-    page,
-  });
-
+function ReposList({ repos }: { repos: Repo[] }) {
   if (repos.length === 0) {
     return (
-      <p className="text-sm opacity-80">
-        No results found — try a different or less specific topic.
-      </p>
+      <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-gray-200 p-8 dark:border-gray-700">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold">No Repositories Found</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Try adjusting your search or filter criteria.
+          </p>
+        </div>
+      </div>
     );
   }
-
   return (
-    <>
-      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {repos.map(r => (
-          <li key={r.id}>
-            <RepoCard {...r} />
-          </li>
-        ))}
-      </ul>
-      <Pagination totalCount={totalCount} perPage={perPage} />
-    </>
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {repos.map((r) => (
+        <li key={r.id}>
+          <RepoCard {...r} />
+        </li>
+      ))}
+    </ul>
   );
 }
 
-export default async function ReposPage({
-  searchParams,
-}: {
-  searchParams: Promise<SP>;
-}) {
-  const sp = await searchParams;
-  const topics = toTopics(sp.topics);
-  const page = Number(first(sp.page)) || 1;
+function ReposPageContent() {
+  const searchParams = useSearchParams();
+  const [repos, setRepos] = useState<Repo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+
   const perPage = 24;
 
+  const fetchReposForClient = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams(searchParams);
+      params.set("perPage", String(perPage));
+      const response = await fetch(`/api/repos?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch repositories");
+      }
+      const data = await response.json();
+      setRepos(data.repos);
+      setTotalCount(data.totalCount);
+    } catch (error) {
+      console.error(error);
+      setRepos([]);
+      setTotalCount(0);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetchReposForClient();
+  }, [fetchReposForClient]);
+
   return (
-    <section className="space-y-6">
+    <div className="space-y-6">
       <header className="space-y-3">
         <h1 className="text-xl font-semibold">Trending Repositories</h1>
         <p className="text-sm opacity-80">
-          Select one or more topics to discover relevant repositories.
+          Discover the most popular and trending open-source AI/ML projects.
         </p>
-
-        <form
-          className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
-          action="/repos"
-        >
-          <label className="flex flex-col gap-1 text-sm sm:col-span-3 lg:col-span-4">
-            <span>Topics</span>
-            <input
-              name="topics"
-              defaultValue={topics.join(",")}
-              placeholder="ai, machine-learning, nlp, computer-vision, agents"
-              className="border rounded px-2 py-1 bg-transparent border-gray-200 dark:border-neutral-700"
-            />
-          </label>
-          <div className="flex items-end">
-            <button className="border rounded px-3 py-1">Apply</button>
-          </div>
-        </form>
-
-        <div className="flex flex-wrap gap-2 text-xs">
-          {[
-            "ai",
-            "machine-learning",
-            "deep-learning",
-            "nlp",
-            "computer-vision",
-            "agents",
-            "generative-ai",
-            "llm",
-          ].map(t => (
-            <a
-              key={t}
-              href={`/repos?topics=${encodeURIComponent(t)}`}
-              className="badge hover:underline"
-            >
-              {t}
-            </a>
-          ))}
-        </div>
+        <RepoFilters />
       </header>
 
-      <Suspense fallback={<RepoGridSkeleton />}>
-        <RepoList topics={topics} page={page} perPage={perPage} />
-      </Suspense>
-    </section>
+      {isLoading ? (
+        <RepoGridSkeleton />
+      ) : (
+        <>
+          <ReposList repos={repos} />
+          <Pagination totalCount={totalCount} perPage={perPage} />
+        </>
+      )}
+    </div>
+  );
+}
+
+export default function ReposPage() {
+  return (
+    <Suspense fallback={<RepoGridSkeleton />}>
+      <ReposPageContent />
+    </Suspense>
   );
 }

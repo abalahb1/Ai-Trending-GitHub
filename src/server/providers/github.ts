@@ -18,6 +18,7 @@ export type Repo = {
 
 export type RepoQuery = {
   topics?: string[];
+  sort?: string;
   perPage?: number;
   page?: number;
 };
@@ -39,13 +40,14 @@ function slugifyTopic(s: string) {
 
 async function searchOnce(
   q: string,
+  sort: string,
   perPage = 24,
   page = 1,
   headers: Record<string, string>,
 ) {
   const params = new URLSearchParams({
     q,
-    sort: "stars",
+    sort,
     order: "desc",
     per_page: String(perPage),
     page: String(page),
@@ -89,6 +91,7 @@ function mapRepo(x: any): Repo {
 
 export async function fetchTrendingRepos({
   topics = [],
+  sort = "stars",
   perPage = 24,
   page = 1,
 }: RepoQuery = {}): Promise<{ repos: any[]; totalCount: number }> {
@@ -118,7 +121,7 @@ export async function fetchTrendingRepos({
   if (process.env.GITHUB_TOKEN)
     headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
 
-  let result = await searchOnce(subject, perPage, page, headers);
+  let result = await searchOnce(subject, sort, perPage, page, headers);
 
   // Fallback: if it returns [], (e.g. due to 422), try each topic alone
   if ((!result.items || result.items.length === 0) && normalized.length) {
@@ -126,6 +129,7 @@ export async function fetchTrendingRepos({
     for (const t of normalized) {
       const chunk = await searchOnce(
         `topic:${t}`,
+        sort,
         Math.max(6, Math.ceil(perPage / normalized.length)),
         page,
         headers,

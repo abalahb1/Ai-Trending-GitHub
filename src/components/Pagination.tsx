@@ -116,6 +116,7 @@ export function Pagination({ totalCount, perPage }: PaginationProps) {
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
+          {totalCount > 0 && (
           <p className="text-sm text-gray-700 dark:text-gray-300">
             Showing{" "}
             <span className="font-medium">
@@ -127,6 +128,7 @@ export function Pagination({ totalCount, perPage }: PaginationProps) {
             </span>{" "}
             of <span className="font-medium">{totalCount}</span> results
           </p>
+          )}
         </div>
         <div>
           <nav

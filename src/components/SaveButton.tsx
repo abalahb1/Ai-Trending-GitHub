@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bookmark, BookmarkCheck } from "lucide-react";
+import type { SavedType } from "@prisma/client";
 
 type SaveButtonProps = {
   item: {
-    type: "article" | "repo";
+    type: SavedType;
     title: string;
     url: string;
     source?: string | null;

@@ -22,6 +22,9 @@ export async function Header() {
             <Link href="/repos" className="hover:underline">
               Repos
             </Link>
+            <Link href="/huggingface" className="hover:underline">
+              Hugging Face
+            </Link>
             <Link href="/dashboard" className="hover:underline">
               Saved
             </Link>

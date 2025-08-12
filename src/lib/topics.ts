@@ -44,3 +44,32 @@ export function toTopicSlug(s: string): string | null {
     .replace(/^-+|-+$/g, "");
   return t && /^[a-z0-9][a-z0-9-]*$/.test(t) ? t : null;
 }
+
+export const popularTopics = [
+  "ai",
+  "machine-learning",
+  "deep-learning",
+  "nlp",
+  "computer-vision",
+  "generative-ai",
+  "llm",
+  "agents",
+  "pytorch",
+  "tensorflow",
+  "jax",
+  "stable-diffusion",
+  "large-language-models",
+  "transformer",
+  "data-science",
+  "data-visualization",
+  "data-analysis",
+  "reinforcement-learning",
+  "robotics",
+  "self-driving-cars",
+  "speech-recognition",
+  "image-generation",
+  "text-to-image",
+  "text-to-speech",
+  "neural-network",
+  "awesome-list",
+];

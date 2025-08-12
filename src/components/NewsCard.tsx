@@ -33,7 +33,7 @@ export default function NewsCard(props: Props) {
   return (
     <article className="relative group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
       <a href={url} target="_blank" rel="noopener noreferrer" className="block">
-        <div className="relative h-40 w-full bg-gray-100 dark:bg-gray-700">
+        <div className="relative h-48 w-full bg-gray-100 dark:bg-gray-700">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -42,13 +42,13 @@ export default function NewsCard(props: Props) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <Globe className="h-12 w-12 text-gray-400" />
+              <Globe className="h-16 w-16 text-gray-400" />
             </div>
           )}
         </div>
       </a>
-      <div className="flex flex-grow flex-col p-4">
-        <h2 className="flex-grow font-semibold text-gray-800 dark:text-gray-100">
+      <div className="flex flex-grow flex-col p-5">
+        <h2 className="flex-grow text-base font-semibold text-gray-800 dark:text-gray-100">
           <a
             href={url}
             target="_blank"
@@ -59,20 +59,20 @@ export default function NewsCard(props: Props) {
           </a>
         </h2>
         {summary && (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
             {summary}
           </p>
         )}
-        <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-          <span className="inline-flex items-center gap-1 font-medium">
-            <Globe size={14} /> {source}
+        <div className="mt-5 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <span className="inline-flex items-center gap-1.5 font-medium">
+            <Globe size={16} /> {source}
           </span>
           {formattedDate && (
             <time
               dateTime={publishedDate?.toISOString()}
-              className="inline-flex items-center gap-1"
+              className="inline-flex items-center gap-1.5"
             >
-              <Calendar size={14} />
+              <Calendar size={16} />
               {formattedDate}
             </time>
           )}

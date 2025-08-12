@@ -10,7 +10,7 @@ type SP = Record<string, string | string[] | undefined>;
 
 function NewsGridSkeleton() {
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 12 }).map((_, i) => (
         <li key={i}>
           <NewsCardSkeleton />
@@ -42,7 +42,7 @@ async function NewsList({ q, language, sort, pageSize }: any) {
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {articles.map(a => (
         <li key={a.id}>
           <NewsCard {...a} />
