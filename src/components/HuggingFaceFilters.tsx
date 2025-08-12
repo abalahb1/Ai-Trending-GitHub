@@ -96,7 +96,7 @@ export function HuggingFaceFilters() {
 
   return (
     <form className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="flex flex-wrap gap-4">
         <input
           name="search"
           placeholder="Search models..."
